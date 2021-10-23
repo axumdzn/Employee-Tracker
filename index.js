@@ -17,7 +17,63 @@ const start = () => {
             type: 'list',
             name: 'start',
             message: 'What would you like to do?',
-            choices: ['']
+            choices: ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role','View All Departments','Add Department','Quit']
         }
-    ])
+    ]).then( data => {
+        switch (data.start) {
+            case 'View All Employees':
+                viewAllEmployee();
+                break;
+            case 'Add Employee':
+                addEmployee();
+                break;
+            case 'Update Employee Role':
+                updateEmployeeRole();
+                break;
+            case 'View All Roles':
+                viewAllRoles();
+                break;
+            case 'Add Role':
+                addRole();
+                break;
+            case 'View All Departments':
+                viewAllDepartments();
+                break;
+            case 'Add Department':
+                addDepartment();
+                break;
+            default:
+                console.info('Bye Bye')
+                break;
+        }
+    })
 }
+
+const viewAllEmployee = () => {
+
+}
+
+const addEmployee = () => {
+
+}
+
+const updateEmployeeRole = () => {
+
+}
+
+const viewAllRoles = () => {
+
+}
+
+const addRole = () => {
+
+}
+
+const viewAllDepartments = () => {
+
+}
+
+const addDepartment = () => {
+
+}
+start();
