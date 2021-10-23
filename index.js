@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const table = require('console.table');
 
 const db = mysql.createConnection(
     {
@@ -50,7 +51,10 @@ const start = () => {
 }
 
 const viewAllEmployee = () => {
-
+    const sql = 'SELECT * FROM employee';
+    console.log('All Employees');
+    console.table(sql);
+    start();
 }
 
 const addEmployee = () => {
