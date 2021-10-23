@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const table = require('console.table');
+const conTable = require('console.table');
+const {table} = require('console');
 
 const db = mysql.createConnection(
     {
@@ -44,17 +45,23 @@ const start = () => {
                 addDepartment();
                 break;
             default:
-                console.info('Bye Bye')
+                console.info('Bye Bye');
                 break;
         }
     })
 }
 
 const viewAllEmployee = () => {
-    const sql = 'SELECT * FROM employee';
-    console.log('All Employees');
-    console.table(sql);
-    start();
+    const sql = 'SELECT * FROM employee;';
+
+    db.query(sql , (err, data) => {
+        if(err) {
+            throw err;
+        };
+        console.log('All Employees\n');
+        console.table(data);
+        start();
+    })
 }
 
 const addEmployee = () => {
@@ -74,7 +81,14 @@ const addRole = () => {
 }
 
 const viewAllDepartments = () => {
-
+    db.query('SELECT * FROM department;', (err,data) => {
+        if(err) {
+            throw err;
+        };
+        console.log('\n');
+        console.log(data);
+        start();
+    })
 }
 
 const addDepartment = () => {
