@@ -1,7 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const conTable = require('console.table');
-const {table} = require('console');
+const cTable = require('console.table');
 
 const db = mysql.createConnection(
     {
@@ -46,7 +45,7 @@ const start = () => {
                 break;
             default:
                 console.info('Bye Bye');
-                break;
+                process.exit();
         }
     })
 }
@@ -73,7 +72,14 @@ const updateEmployeeRole = () => {
 }
 
 const viewAllRoles = () => {
-
+    db.query('SELECT role.id AS id, role.title AS title, department.department_name AS department, role.salary AS salary FROM role LEFT JOIN department ON role.department_id = department.id;', (err,data) => {
+        if(err) {
+            throw err;
+        };
+        console.log('\n');
+        console.table(data);
+        start();
+    })
 }
 
 const addRole = () => {
@@ -81,12 +87,12 @@ const addRole = () => {
 }
 
 const viewAllDepartments = () => {
-    db.query('SELECT * FROM department;', (err,data) => {
+    db.query('SELECT department.id as id, department_name AS department FROM department;', (err,data) => {
         if(err) {
             throw err;
         };
         console.log('\n');
-        console.log(data);
+        console.table(data);
         start();
     })
 }
