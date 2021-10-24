@@ -51,13 +51,12 @@ const start = () => {
 }
 
 const viewAllEmployee = () => {
-    const sql = 'SELECT * FROM employee;';
 
-    db.query(sql , (err, data) => {
+    db.query('SELECT E1.id, E1.first_name, E1.last_name, role.title, department.department_name AS department, role.salary, CONCAT(E2.first_name," ",E2.last_name) AS manager FROM ((employee E1 LEFT JOIN employee E2 ON E1.manager_id = E2.id)JOIN role ON E1.role_id = role.id) JOIN department ON role.department_id = department.id;' , (err, data) => {
         if(err) {
             throw err;
         };
-        console.log('All Employees\n');
+        console.log('\n');
         console.table(data);
         start();
     })
@@ -98,6 +97,6 @@ const viewAllDepartments = () => {
 }
 
 const addDepartment = () => {
-
+    
 }
 start();
