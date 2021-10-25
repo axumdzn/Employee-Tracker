@@ -114,7 +114,43 @@ const addEmployee = () => {
 }
 
 const updateEmployeeRole = () => {
-
+    db.query('SELECT first_name, last_name, id FROM employee', (err,res) => {
+        if(err) {
+            throw err;
+        };
+        inquirer.prompt([
+            {
+                type: 'list',
+                name:'name',
+                message: 'Who do you want to update?',
+                choices: res.map((employee)=> `${employee.first_name} ${employee.last_name}`)
+            }
+        ]).then(data => {
+            db.query('SELECT title, id FROM role', (err,res2)=> {
+                if(err) {
+                    throw err;
+                }
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'newRole',
+                        message: 'What role do you want now?',
+                        choices: res2.map((role)=> role.title)
+                    }
+                ]).then(data2 => {
+                    const empId = res.filter((name1)=>`${name1.first_name} ${name1.last_name}`===data.name)[0].id;
+                    const roleId = res2.filter((role1)=> role1.title === data2.newRole)[0].id;
+                    db.query('UPDATE employee SET role_id = (?) WHERE id = (?)',[roleId,empId],(err,result)=> {
+                        if(err) {
+                            throw err;
+                        }
+                        console.log('\nRole Updated');
+                        start();
+                    })
+                })
+            })
+        })
+    })
 }
 
 const viewAllRoles = () => {
