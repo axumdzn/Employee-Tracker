@@ -6,7 +6,7 @@ const db = mysql.createConnection(
     {
       host: 'localhost',
       user: 'root',
-      password: 'd1Uh$0r#6',
+      password: 'password',
       database: 'company_db'
     },
     console.log(`Connected to the company_db database.`)
@@ -97,6 +97,22 @@ const viewAllDepartments = () => {
 }
 
 const addDepartment = () => {
-    
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the name of the department?",
+            name: "depname"
+        }
+    ]).then( dep=> {
+        const sql = "INSERT INTO department (department_name) VALUES (?);";
+
+        db.query(sql, dep.depname, (err,data) => {
+            if(err) {
+                throw err;
+            }
+            console.table(data);
+            console.log('/nNew department has been added.');
+        })
+    })
 }
 start();
