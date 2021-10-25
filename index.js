@@ -82,7 +82,37 @@ const viewAllRoles = () => {
 }
 
 const addRole = () => {
-
+    db.query('SELECT department_name FROM department;', (err,res) =>
+    {
+        if(err) {
+            throw err;
+        };
+        inquirer.prompt([{
+            type: "input",
+            name: "title",
+            message: "What is the name of the role?",
+        },
+        {
+            type: "number",
+            name: "salary",
+            message: "How much is the salary?"
+        },
+        {
+            type: "list",
+            name: "department",
+            message: "What department is this role in?",
+            choices: res.map((department)=> department.department_name)
+        }
+    ]).then(data => {
+        db.query('INSERT INTO role (title, salary, department_id) VALUES (?,?,?);',[data.title, data.salary, data.department], (err, ans) => {
+            if(err) {
+                throw err;
+            };
+            console.log('\nRole added');
+            start();
+        })
+    })
+    })
 }
 
 const viewAllDepartments = () => {
@@ -111,7 +141,8 @@ const addDepartment = () => {
                 throw err;
             }
             console.table(data);
-            console.log('/nNew department has been added.');
+            console.log(`\nNew department has been added.`);
+            start();
         })
     })
 }
