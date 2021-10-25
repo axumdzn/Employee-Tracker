@@ -187,7 +187,7 @@ const addRole = () => {
             choices: res.map((department)=> department.department_name)
         }
     ]).then(data => {
-        deptId = res.filter((dept)=> dept.department_name === data.department)[0].id;
+        const deptId = res.filter((dept)=> dept.department_name === data.department)[0].id;
         db.query('INSERT INTO role (title, salary, department_id) VALUES (?,?,?);',[data.title, data.salary, deptId], (err, ans) => {
             if(err) {
                 throw err;
