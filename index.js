@@ -63,7 +63,54 @@ const viewAllEmployee = () => {
 }
 
 const addEmployee = () => {
-
+    inquirer.prompt([
+        {
+            type:"input",
+            name:"first",
+            message: "What is your first name?"
+        },
+        {
+            type:"input",
+            name:"last",
+            message: "What is your last name?"
+        }
+    ]).then(name => {
+        db.query('SELECT role.title, role.id FROM role', (err, rol) => {
+            if(err) {
+                throw err;
+            };
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: "rolename",
+                    message: "Which role do you belong to?",
+                    choices: rol.map((role)=>role.title)
+                }
+            ]).then(rolans => {
+                db.query('SELECT first_name,last_name, id FROM employee', (err, man) => {
+                    inquirer.prompt([
+                        {
+                            type: 'list',
+                            name: 'manName',
+                            message: "What is your manager's name?",
+                            choices: man.map((employee)=>`${employee.first_name} ${employee.last_name}`)
+                        }
+                    ]).then(manNa => {
+                        const rolId = rol.filter((dat) => dat.title === rolans.rolename)[0].id;
+                        const manId = man.filter((data) => `${data.first_name} ${data.last_name}` === manNa.manName)[0].id;
+                        db.query('INSERT INTO employee (first_name,last_name,role_id,manager_id) VALUES (?,?,?,?)',[name.first,name.last,rolId,manId],(err,ans)=> {
+                            if(err) {
+                                throw err;
+                            };
+                            console.log('\nEmployee has been added');
+                            start();
+                        })
+                        
+                    })
+                })
+            })
+        })
+    })
 }
 
 const updateEmployeeRole = () => {
@@ -82,7 +129,7 @@ const viewAllRoles = () => {
 }
 
 const addRole = () => {
-    db.query('SELECT department_name FROM department;', (err,res) =>
+    db.query('SELECT department_name, id FROM department;', (err,res) =>
     {
         if(err) {
             throw err;
@@ -104,7 +151,8 @@ const addRole = () => {
             choices: res.map((department)=> department.department_name)
         }
     ]).then(data => {
-        db.query('INSERT INTO role (title, salary, department_id) VALUES (?,?,?);',[data.title, data.salary, data.department], (err, ans) => {
+        deptId = res.filter((dept)=> dept.department_name === data.department)[0].id;
+        db.query('INSERT INTO role (title, salary, department_id) VALUES (?,?,?);',[data.title, data.salary, deptId], (err, ans) => {
             if(err) {
                 throw err;
             };
